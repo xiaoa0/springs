@@ -9,11 +9,14 @@ public class APCalendar {
      * isLeapYear(2016) returns True
      */          
     public static boolean isLeapYear(int year) {
-        // implementation not shown
-
-        return false;
+        if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+            return true;
         }
-        
+    
+        else {
+            return false;
+        }
+    }
     /** Returns the value representing the day of the week 
      * 0 denotes Sunday, 
      * 1 denotes Monday, ..., 
@@ -21,11 +24,21 @@ public class APCalendar {
      * firstDayOfYear(2019) returns 2 for Tuesday.
     */
     private static int firstDayOfYear(int year) {
-        // implementation not shown
 
-        return 0;
-        }
-
+        int leapyears, years, days, day;
+    
+        year = (year - 1) - 1899; // counting years between
+    
+        leapyears = year / 4; // counting leap years
+    
+        years = year - leapyears; // counting regular years
+    
+        days = (years * 365) + (leapyears * 366) + 1; //total number of days in years between (plus 1)
+    
+        day = (days % 7); // returning integer for week day
+    
+        return day;
+    }
 
     /** Returns n, where month, day, and year specify the nth day of the year.
      * This method accounts for whether year is a leap year. 
@@ -34,20 +47,37 @@ public class APCalendar {
      * dayOfYear(3, 1, 2016) returns 61, since 2016 is a leap year. 
     */ 
     private static int dayOfYear(int month, int day, int year) {
-        // implementation not shown
+        int totaldays; // storage variable
 
-        return 1;
+        int months[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; // days in each month
+        
+        while (month-- > 1){
+            totaldays = totaldays + months[month-1]; // adding all days from months before
         }
+
+        if (isLeapYear(year)) {
+            totaldays++; // adding an extra day if it's a leapyear
+        }
+        
+        return totaldays+day; // adding to the day of the current month that wasn't included
+
+    }
 
     /** Returns the number of leap years between year1 and year2, inclusive.
      * Precondition: 0 <= year1 <= year2
     */ 
     public static int numberOfLeapYears(int year1, int year2) {
-         // to be implemented in part (a)
-
-        return 0;
+        int counter = 0;
+        for (int i = year1; i<=year2; i++){
+            if(isLeapYear(i)){
+            count++;
         }
-
+        else {
+             return 0;
+        }
+    }
+        return count;
+    }
     /** Returns the value representing the day of the week for the given date
      * Precondition: The date represented by month, day, year is a valid date.
     */
