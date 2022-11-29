@@ -63,6 +63,10 @@ public class Person {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
+
+    private int height;
+
+    private int weight;
     
 
     /* HashMap is used to store JSON for daily "stats"
@@ -79,19 +83,38 @@ public class Person {
     
 
     // Constructor used when building object from an API
-    public Person(String email, String password, String name, Date dob) {
+    public Person(String email, String password, String name, Date dob, Integer height, Integer weight) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.dob = dob;
+        this.height = height;
+        this.weight = weight;
     }
 
     // A custom getter to return age from dob attribute
     public int getAge() {
         if (this.dob != null) {
             LocalDate birthDay = this.dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            return Period.between(birthDay, LocalDate.now()).getYears(); }
+            return Period.between(birthDay, LocalDate.now()).getYears();
+        }
         return -1;
+    }
+
+    public String convertAgeToString() {
+        return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
+    }
+
+    public String toString() {
+        return ("{ \"Name\": " + this.name + ", " + "\"DOB\": " + this.dob + ", " + "\"Height\": " + this.height + ", " + "\"Weight\": " + this.weight + " }");
+    }
+
+    public static void main(String[] args) {
+        Person person1 = new Person();
+        Person person2 = new Person("Allie@Gmail.com", "password", "Allie Xiao", new Date(2005 - 04 - 30), 63, 118);
+    
+        System.out.println(person1);
+        System.out.println(person2);
     }
 
 }
