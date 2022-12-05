@@ -157,6 +157,24 @@ public class Calculator {
 
     }
 
+    public double calculate(String operator, double1 double2) {
+        switch (operator) {
+            case "+":
+                return double1 + double2;
+            case "-":
+                return double1 - double2;
+            case "*":
+                return double1 * double2;
+            case "/":
+                return double1 / double2;
+            case "%":
+                return double1 % double2;
+            case "^":
+                return Math.pow(double1, double2);
+           
+        }
+    }
+
     // Takes RPN and produces a final result
     private void rpnToResult()
     {
@@ -170,9 +188,29 @@ public class Calculator {
             if (isOperator(token))
             {
                 // Pop the two top entries
+                Double num = calcStack.pop();
+                Double num2 = calcStack.pop();
 
                 // Calculate intermediate results
-                result = 0.0;
+                if (token == "+") {
+                    result = num + num2;
+                }
+
+                if (token == "-") {
+                    result = num - num2;
+                }
+
+                if (token == "*") {
+                    result = num * num2;
+                }
+
+                if (token == "/") {
+                    result = num / num2;
+                }
+
+                if (token == "%") {
+                    result = num % num2;
+                }
 
                 // Push intermediate result back onto the stack
                 calcStack.push( result );
