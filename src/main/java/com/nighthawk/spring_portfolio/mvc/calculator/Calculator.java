@@ -45,6 +45,7 @@ public class Calculator {
         // original input
         this.expression = expression;
 
+        this.checkParentheses();
         // parse expression into terms
         this.termTokenizer();
 
@@ -53,6 +54,21 @@ public class Calculator {
 
         // calculate reverse polish notation
         this.rpnToResult();
+    }
+
+    private void checkParentheses() {
+        int leftParenthesis = 0;
+        int rightParenthesis = 0;
+        for (int i = 0; i < this.expression.length(); i++) {
+            if (this.expression.charAt(i) == '(') {
+                leftParenthesis++;
+            } else if (this.expression.charAt(i) == ')') {
+                rightParenthesis++;
+            }
+        }
+        if (leftParenthesis != rightParenthesis) {
+            throw new RuntimeException("Parentheses are imbalanced, please try again");
+        }
     }
 
     // Test if token is an operator
@@ -157,73 +173,66 @@ public class Calculator {
 
     }
 
-    public double calculate(String operator, double1 double2) {
-        switch (operator) {
-            case "+":
-                return double1 + double2;
-            case "-":
-                return double1 - double2;
-            case "*":
-                return double1 * double2;
-            case "/":
-                return double1 / double2;
-            case "%":
-                return double1 % double2;
-            case "^":
-                return Math.pow(double1, double2);
-           
-        }
-    }
-
-    // Takes RPN and produces a final result
-    private void rpnToResult()
-    {
-        // stack is used to hold operands and each calculation
-        Stack<Double> calcStack = new Stack<Double>();
-
-        // RPN is processed, ultimately calcStack has final result
-        for (String token : this.reverse_polish)
+        // Takes RPN and produces a final result
+        private void rpnToResult()
         {
-            // If the token is an operator, calculate
-            if (isOperator(token))
+            // stack is used to hold operands and each calculation
+            Stack<Double> calcStack = new Stack<Double>();
+    
+            // RPN is processed, ultimately calcStack has final result
+            for (String token : this.reverse_polish)
             {
-                // Pop the two top entries
-                Double num = calcStack.pop();
-                Double num2 = calcStack.pop();
-
-                // Calculate intermediate results
-                if (token == "+") {
-                    result = num + num2;
+                // If the token is an operator, calculate
+                if (isOperator(token))
+                {
+                                  
+                    // Pop the top two entries
+                    double b = calcStack.pop();
+                    double a = calcStack.pop();
+                    // double c = 1/2;
+    
+                    // Calculate intermediate results
+                    switch (token) {
+                        case "+":
+                            result = a + b;
+                            break;
+                        case "-":
+                            result = a - b;
+                            break;
+                        case "*":
+                            result = a * b;
+                            break; 
+                        case "/":
+                            result = a / b;
+                            break;
+                        case "%":
+                            result = a % b;
+                            break;
+                        case "POWER":
+                            result = Math.pow(a,b);
+                            break;
+                        case "SQRT":
+                            result = Math.pow(b,1/a);
+                            break;
+                        default:
+                            break;
+                    }
+    
+                    // Pop the two top entries
+    
+    
+                    // Push intermediate result back onto the stack
+                    calcStack.push( result );
                 }
-
-                if (token == "-") {
-                    result = num - num2;
+                // else the token is a number push it onto the stack
+                else
+                {
+                    calcStack.push(Double.valueOf(token));
                 }
-
-                if (token == "*") {
-                    result = num * num2;
-                }
-
-                if (token == "/") {
-                    result = num / num2;
-                }
-
-                if (token == "%") {
-                    result = num % num2;
-                }
-
-                // Push intermediate result back onto the stack
-                calcStack.push( result );
             }
-            // else the token is a number push it onto the stack
-            else
-            {
-                calcStack.push(Double.valueOf(token));
-            }
+            // Pop final result and set as final result for expression
+            this.result = calcStack.pop();
         }
-        // Pop final result and set as final result for expression
-        this.result = calcStack.pop();
-    }
 
     // Print the expression, terms, and result
     public String toString() {
